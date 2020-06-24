@@ -75,16 +75,21 @@ void Subject::notifyObserver() {
 class ConcreateObserver : public Observer {
 public:
     ConcreateObserver(string name, Subject* subject) : m_observerName(name), m_subject(subject) {};
+    ConcreateObserver(string name) : m_observerName(name){};
     ~ConcreateObserver(){};
     void update();
 
 private:
     string m_observerName;
-    Subject* m_subject;
+    Subject* m_subject = NULL;
 };
 
+// void ConcreateObserver::update() {
+//     cout << "update observer[" << m_observerName << "]status :" << m_subject->getStatus() << endl;
+// }
+
 void ConcreateObserver::update() {
-    cout << "update observer[" << m_observerName << "]status :" << m_subject->getStatus() << endl;
+    cout << "update observer[" << m_observerName << "]"  << endl;
 }
 
 // 具体目标（被观察者）
@@ -118,12 +123,17 @@ int main(int argc, char* argv[])
     Subject* SubjectB = new ConcreateSubject("SubjectB");
 
     //创建观察者并与目标绑定
-    Observer* observerA = new ConcreateObserver("ObserverA", SubjectA);
-    Observer* observerB = new ConcreateObserver("ObserverB", SubjectB);
+    //Observer* observerA = new ConcreateObserver("ObserverA", SubjectA);    
+    //Observer* observerB = new ConcreateObserver("ObserverB", SubjectB);
+
+    Observer* observerA = new ConcreateObserver("ObserverA");
+    Observer* observerB = new ConcreateObserver("ObserverB");
+    Observer* observerC = new ConcreateObserver("ObserverC");
 
     // 观察者与目标进行绑定
     SubjectA->addObserver(observerA);
     SubjectB->addObserver(observerB);
+    SubjectB->addObserver(observerC);
 
     //修改目标状态，目标状态的改变通知观察者
     SubjectA->setStatus(1);
@@ -136,6 +146,7 @@ int main(int argc, char* argv[])
 
     //在目标上新增观察者
     SubjectA->addObserver(observerB);
+    SubjectA->addObserver(observerC);
     SubjectA->setStatus(2);
     SubjectA->notifyObserver();
 
@@ -143,6 +154,7 @@ int main(int argc, char* argv[])
     delete SubjectB;
     delete observerA;
     delete observerB;
+    delete observerC;
 
     return 0;
 }
